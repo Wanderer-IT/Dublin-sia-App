@@ -7,47 +7,105 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Honkai Starail Characters</h1>
-    <button onclick="loadHsrChars()">Display Honkai Starail Characters</button>
-    <ul id="list"></ul>
+    <h1>Honkai Star Rail Characters</h1>
 
-    <h1>Add Characters</h1>
-    <input type="text"  id="name" name="name" placeholder="name">
-    <input type="text" id="CharType"  name="CharType" placeholder="CharType">
-    <button onclick="addloadHsrChars()">Submit</button>
-    
-</body>
-</html>
+<button onclick="loadHsrChars()">Load Characters</button>
+<button onclick="loadRandom()">Random</button>
+
+<br><br>
+
+<input type="text" id="search" placeholder="Search name">
+<button onclick="searchChar()">Search</button>
+
+<br><br>
+
+<ul id="list"></ul>
+
+<h2>Add Character</h2>
+
+<input type="text" id="name" placeholder="Name">
+<input type="text" id="CharType" placeholder="Type">
+<button onclick="addChar()">Add</button>
 
 <script>
-async function loadHsrChars() {
-        const res = await fetch('http://localhost:3000/api/HsrCharacters')
-        const data = await res.json()
 
+    async function loadHsrChars() {
+        const res = await fetch('/api/HsrCharacters')
+        const data = await res.json()
+        displayList(data)
+    }
+
+    function displayList(data) {
         const list = document.getElementById('list')
         list.innerHTML = ''
 
-        data.forEach((HsrCharacters) => {
+        data.forEach(char => {
             const li = document.createElement('li')
-            li.textContent = `NAME: ${HsrCharacters.name} \n Char Type: ${HsrCharacters.CharType}`
-            list.appendChild(li)
-        });
-}
 
-    async function addloadHsrChars(){
+            li.innerHTML = `
+                ${char.name} (${char.CharType})
+                <button onclick="deleteChar(${char.id})">Delete</button>
+            `
+
+            list.appendChild(li)
+        })
+    }
+
+    async function addChar() {
         const name = document.getElementById('name').value
         const CharType = document.getElementById('CharType').value
-        const res = await fetch('http://localhost:3000/api/HsrCharacters', 
-        {
+
+        if (!name || !CharType) {
+            alert('Fill all fields')
+            return
+        }
+
+        const res = await fetch('/api/HsrCharacters', {
             method: 'POST',
-            headers:{
+            headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name,CharType})
+            body: JSON.stringify({ name, CharType })
+        })
+
+        if (!res.ok) {
+            alert('Error adding character')
+            return
         }
-    )
-        const data = await res.json()
-        console.log(data)
+
+        document.getElementById('name').value = ''
+        document.getElementById('CharType').value = ''
+
         loadHsrChars()
     }
+
+    async function deleteChar(id) {
+        const res = await fetch(`/api/HsrCharacters/${id}`, {
+            method: 'DELETE'
+        })
+
+        if (!res.ok) {
+            alert('Delete failed')
+            return
+        }
+
+        loadHsrChars()
+    }
+
+    async function searchChar() {
+        const name = document.getElementById('search').value
+
+        const res = await fetch(`/api/search?name=${name}`)
+        const data = await res.json()
+
+        displayList(data)
+    }
+
+    async function loadRandom() {
+        const res = await fetch('/api/random')
+        const data = await res.json()
+
+        displayList([data])
+    }
+
 </script>
