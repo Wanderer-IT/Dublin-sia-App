@@ -10,36 +10,36 @@ app.use(express.json())
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-const students = [
+const HsrCharacters = [
     {
         id: 1,
         name: "Wanderer",
-        yearLevel: 1,
+        CharType: "Wind",
     },
     {
         id: 2,
         name: "Shin",
-        yearLevel: 2,
+        CharType: "Lightning",
     },
     {
         id: 3,
         name: "Acheron",
-        yearLevel: 3,
+        CharType: "Lightning",
     },
 ]
 
-app.get('/api/students', (req, res) =>{
-    res.json(students)
+app.get('/api/HsrCharacters', (req, res) =>{
+    res.json(HsrCharacters)
 })
 
-app.post('/api/students', (req, res) =>{
-    const {name,yearLevel} = req.body
-    const newStudent = {name, yearLevel}
-    students.push(newStudent)
+app.post('/api/HsrCharacters', (req, res) =>{
+    const {name,CharType} = req.body
+    const newHsrCharacters = {name, CharType}
+    HsrCharacters.push(newHsrCharacters)
 
     res.json(201).json({
-        message: "Student added successfuly",
-        students:newStudent
+        message: "Honkai Starail Characters have been added successfuly",
+        HsrCharacters:newHsrCharacters
     })
 })
 

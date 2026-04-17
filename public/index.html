@@ -4,49 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Students In Each Country</h1>
-    <button onclick="loadStudent()">Display Students</button>
+    <h1>Honkai Starail Characters</h1>
+    <button onclick="loadHsrChars()">Display Honkai Starail Characters</button>
     <ul id="list"></ul>
 
-    <h1>Add Student</h1>
+    <h1>Add Characters</h1>
     <input type="text"  id="name" name="name" placeholder="name">
-    <input type="number" id="yearLevel"  name="yearLevel" placeholder="yearLevel">
-    <button onclick="addStudent()">Submit</button>
+    <input type="text" id="CharType"  name="CharType" placeholder="CharType">
+    <button onclick="addloadHsrChars()">Submit</button>
     
 </body>
 </html>
 
 <script>
-async function loadStudent() {
-        const res = await fetch('http://localhost:3000/api/students')
+async function loadHsrChars() {
+        const res = await fetch('http://localhost:3000/api/HsrCharacters')
         const data = await res.json()
 
         const list = document.getElementById('list')
         list.innerHTML = ''
 
-        data.forEach((students) => {
+        data.forEach((HsrCharacters) => {
             const li = document.createElement('li')
-            li.textContent = `NAME: ${students.name} \n YEAR LEVEL: ${students.yearLevel}`
+            li.textContent = `NAME: ${HsrCharacters.name} \n Char Type: ${HsrCharacters.CharType}`
             list.appendChild(li)
         });
 }
 
-    async function addStudent(){
+    async function addloadHsrChars(){
         const name = document.getElementById('name').value
-        const yearLevel = document.getElementById('yearLevel').value
-        const res = await fetch('http://localhost:3000/api/students', 
+        const CharType = document.getElementById('CharType').value
+        const res = await fetch('http://localhost:3000/api/HsrCharacters', 
         {
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({name,yearLevel})
+            body: JSON.stringify({name,CharType})
         }
     )
         const data = await res.json()
         console.log(data)
-        loadStudent()
+        loadHsrChars()
     }
 </script>
