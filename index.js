@@ -131,5 +131,5 @@ res.json(top)
 })
 
 app.listen(port, () => {
-console.log(`Server running on http://localhost:${port}`)
+console.log(`Server running on https://dublin-sia-app.onrender.com`)
 })
